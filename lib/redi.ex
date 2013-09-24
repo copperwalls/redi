@@ -1264,18 +1264,21 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "hihash"
-    "0"
-    iex> Redi.hset "hihash", "field", 5
-    "1"
-    iex> Redi.hincrby "hihash", "field", 1
-    "6"
-    iex> Redi.hincrby "hihash", "field", "-1"
-    "5"
-    iex> Redi.hincrby "hihash", "field", "-10"
-    "-5"
-    iex> Redi.del "hihash"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "hihash"
+        "0"
+        iex> Redi.hset db, "hihash", "field", 5
+        "1"
+        iex> Redi.hincrby db, "hihash", "field", 1
+        "6"
+        iex> Redi.hincrby db, "hihash", "field", "-1"
+        "5"
+        iex> Redi.hincrby db, "hihash", "field", "-10"
+        "-5"
+        iex> Redi.del db, "hihash"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def hincrby(client // connect, key, field, increment),
@@ -1714,14 +1717,17 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del ["one", "two", "three", "four"]
-    "0"
-    iex> Redi.mset ["one", 1, "two", 2, "three", 3, "four", 4]
-    "OK"
-    iex> Redi.keys "t??"
-    ["two"]
-    iex> Redi.del ["one", "two", "three", "four"]
-    "4"
+        iex> db = Redi.connect
+        iex> Redi.del db, ["one", "two", "three", "four"]
+        "0"
+        iex> Redi.mset db, ["one", 1, "two", 2, "three", 3, "four", 4]
+        "OK"
+        iex> Redi.keys db, "t??"
+        ["two"]
+        iex> Redi.del db, ["one", "two", "three", "four"]
+        "4"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def keys(client // connect, pattern), do: query(client, [ "KEYS", pattern ])
@@ -1757,20 +1763,23 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "lilist"
-    "0"
-    iex> Redi.lpush "lilist", "World"
-    "1"
-    iex> Redi.lpush "lilist", "Hello"
-    "2"
-    iex> Redi.lindex "lilist", 0
-    "Hello"
-    iex> Redi.lindex "lilist", -1
-    "World"
-    iex> Redi.lindex "lilist", 3
-    :undefined
-    iex> Redi.del "lilist"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "lilist"
+        "0"
+        iex> Redi.lpush db, "lilist", "World"
+        "1"
+        iex> Redi.lpush db, "lilist", "Hello"
+        "2"
+        iex> Redi.lindex db, "lilist", 0
+        "Hello"
+        iex> Redi.lindex db, "lilist", -1
+        "World"
+        iex> Redi.lindex db, "lilist", 3
+        :undefined
+        iex> Redi.del db, "lilist"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def lindex(client // connect, key, index),
@@ -1795,18 +1804,21 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "lnlist"
-    "0"
-    iex> Redi.rpush "lnlist", "Hello"
-    "1"
-    iex> Redi.rpush "lnlist", "World"
-    "2"
-    iex> Redi.linsert "lnlist", "BEFORE", "World", "There"
-    "3"
-    iex> Redi.lrange "lnlist", 0, -1
-    ["Hello", "There", "World"]
-    iex> Redi.del "lnlist"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "lnlist"
+        "0"
+        iex> Redi.rpush db, "lnlist", "Hello"
+        "1"
+        iex> Redi.rpush db, "lnlist", "World"
+        "2"
+        iex> Redi.linsert db, "lnlist", "BEFORE", "World", "There"
+        "3"
+        iex> Redi.lrange db, "lnlist", 0, -1
+        ["Hello", "There", "World"]
+        iex> Redi.del db, "lnlist"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def linsert(client // connect, key, position, pivot, value),
@@ -1827,16 +1839,19 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "lllist"
-    "0"
-    iex> Redi.lpush "lllist", "World"
-    "1"
-    iex> Redi.lpush "lllist", "Hello"
-    "2"
-    iex> Redi.llen "lllist"
-    "2"
-    iex> Redi.del "lllist"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "lllist"
+        "0"
+        iex> Redi.lpush db, "lllist", "World"
+        "1"
+        iex> Redi.lpush db, "lllist", "Hello"
+        "2"
+        iex> Redi.llen db, "lllist"
+        "2"
+        iex> Redi.del db, "lllist"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def llen(client // connect, key), do: query(client, [ "LLEN", key ])
@@ -1854,20 +1869,23 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "lplist"
-    "0"
-    iex> Redi.rpush "lplist", "one"
-    "1"
-    iex> Redi.rpush "lplist", "two"
-    "2"
-    iex> Redi.rpush "lplist", "three"
-    "3"
-    iex> Redi.lpop "lplist"
-    "one"
-    iex> Redi.lrange "lplist", 0, -1
-    ["two", "three"]
-    iex> Redi.del "lplist"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del "lplist"
+        "0"
+        iex> Redi.rpush db, "lplist", "one"
+        "1"
+        iex> Redi.rpush db, "lplist", "two"
+        "2"
+        iex> Redi.rpush db, "lplist", "three"
+        "3"
+        iex> Redi.lpop db, "lplist"
+        "one"
+        iex> Redi.lrange db, "lplist", 0, -1
+        ["two", "three"]
+        iex> Redi.del db, "lplist"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def lpop(client // connect, key), do: query(client, [ "LPOP", key ])
@@ -1887,16 +1905,19 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "lpslist"
-    "0"
-    iex> Redi.lpush "lpslist", "world"
-    "1"
-    iex> Redi.lpush "lpslist", "hello"
-    "2"
-    iex> Redi.lrange "lpslist", 0, -1
-    ["hello", "world"]
-    iex> Redi.del "lpslist"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "lpslist"
+        "0"
+        iex> Redi.lpush db, "lpslist", "world"
+        "1"
+        iex> Redi.lpush db, "lpslist", "hello"
+        "2"
+        iex> Redi.lrange db, "lpslist", 0, -1
+        ["hello", "world"]
+        iex> Redi.del db, "lpslist"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def lpush(client // connect, key, value) do
@@ -1922,20 +1943,23 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "lxlist"
-    "0"
-    iex> Redi.lpush "lxlist", "World"
-    "1"
-    iex> Redi.lpush "lxlist", "Hello"
-    "2"
-    iex> Redi.lpushx "lxotherlist", "Hello"
-    "0"
-    iex> Redi.lrange "lxlist", 0, -1
-    ["Hello", "World"]
-    iex> Redi.lrange "lxotherlist", 0, -1
-    []
-    iex> Redi.del "lxlist"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "lxlist"
+        "0"
+        iex> Redi.lpush db, "lxlist", "World"
+        "1"
+        iex> Redi.lpush db, "lxlist", "Hello"
+        "2"
+        iex> Redi.lpushx db, "lxotherlist", "Hello"
+        "0"
+        iex> Redi.lrange db, "lxlist", 0, -1
+        ["Hello", "World"]
+        iex> Redi.lrange db, "lxotherlist", 0, -1
+        []
+        iex> Redi.del db, "lxlist"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def lpushx(client // connect, key, value),
@@ -1957,24 +1981,27 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "lrlist"
-    "0"
-    iex> Redi.rpush "lrlist", "one"
-    "1"
-    iex> Redi.rpush "lrlist", "two"
-    "2"
-    iex> Redi.rpush "lrlist", "three"
-    "3"
-    iex> Redi.lrange "lrlist", 0, 0
-    ["one"]
-    iex> Redi.lrange "lrlist", -3, 2
-    ["one", "two", "three"]
-    iex> Redi.lrange "lrlist", -100, 100
-    ["one", "two", "three"]
-    iex> Redi.lrange "lrlist", 5, 10
-    []
-    iex> Redi.del "lrlist"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "lrlist"
+        "0"
+        iex> Redi.rpush db, "lrlist", "one"
+        "1"
+        iex> Redi.rpush db, "lrlist", "two"
+        "2"
+        iex> Redi.rpush db, "lrlist", "three"
+        "3"
+        iex> Redi.lrange db, "lrlist", 0, 0
+        ["one"]
+        iex> Redi.lrange db, "lrlist", -3, 2
+        ["one", "two", "three"]
+        iex> Redi.lrange db, "lrlist", -100, 100
+        ["one", "two", "three"]
+        iex> Redi.lrange db, "lrlist", 5, 10
+        []
+        iex> Redi.del db, "lrlist"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def lrange(client // connect, key, range_start, range_stop),
