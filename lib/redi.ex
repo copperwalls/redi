@@ -3005,7 +3005,7 @@ defmodule Redi do
 
   ## Return value
 
-  Status code reply](http://redis.io/topics/protocol#status-reply)
+  [Status code reply](http://redis.io/topics/protocol#status-reply)
 
   """
   def select(client // connect, index), do: query(client, [ "SELECT", index ])
