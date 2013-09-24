@@ -4,7 +4,7 @@ defmodule Redi.Mixfile do
   def project do
     [ app: :redi,
       version: "0.0.7",
-      elixir: "~> 0.10.2-dev",
+      elixir: "~> 0.10.3-dev",
       deps: deps ]
   end
 
