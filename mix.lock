@@ -1,0 +1,2 @@
+[ "eredis": {:git, "git://github.com/wooga/eredis.git", "313fce73b0fdb53f3a5f146a7adf19677b417cb5", [{:tag, "v1.0.6"}]},
+  "exredis": {:git, "git://github.com/artemeff/exredis.git", "1a75d11a5b971c26acec68f99905efb263f7ce28", [{:tag, "v0.0.4"}]} ]
