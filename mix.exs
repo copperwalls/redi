@@ -17,7 +17,7 @@ defmodule Redi.Mixfile do
   # { :foobar, "~> 0.1", git: "https://github.com/elixir-lang/foobar.git" }
   defp deps do
     [
-      { :exredis,"0.0.3",[github: "artemeff/exredis", tag: "v0.0.3"] }
+      { :exredis,"0.0.4",[github: "artemeff/exredis", tag: "v0.0.4"] }
     ]
   end
 end
