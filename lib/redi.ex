@@ -1034,7 +1034,7 @@ defmodule Redi do
   """
   def getrange(client // connect, key, range_start, range_end),
     do: query(client,
-      [ "GETRANGE", key, to_binary(range_start), to_binary(range_end) ])
+      [ "GETRANGE", key, to_string(range_start), to_string(range_end) ])
 
   @doc """
   ## GETSET key value
@@ -1219,7 +1219,7 @@ defmodule Redi do
 
   """
   def hincrby(client // connect, key, field, increment),
-    do: query(client, [ "HINCRBY", key, field, to_binary(increment) ])
+    do: query(client, [ "HINCRBY", key, field, to_string(increment) ])
 
   @doc """
   ## HINCRBYFLOAT key field increment
@@ -1251,7 +1251,7 @@ defmodule Redi do
 
   """
   def hincrbyfloat(client // connect, key, field, increment),
-    do: query(client, [ "HINCRBYFLOAT", key, field, to_binary(increment) ])
+    do: query(client, [ "HINCRBYFLOAT", key, field, to_string(increment) ])
 
   @doc """
   ## HKEYS key
@@ -1426,7 +1426,7 @@ defmodule Redi do
 
   """
   def hset(client // connect, key, field, value),
-    do: query(client, [ "HSET", key, field, to_binary(value) ])
+    do: query(client, [ "HSET", key, field, to_string(value) ])
 
   @doc """
   ## HSETNX key field value
@@ -1576,7 +1576,7 @@ defmodule Redi do
 
   """
   def incrbyfloat(client // connect, key, increment),
-    do: query(client, [ "INCRBYFLOAT", key, to_binary(increment) ])
+    do: query(client, [ "INCRBYFLOAT", key, to_string(increment) ])
 
   @doc """
   ## INFO [section]
@@ -1681,7 +1681,7 @@ defmodule Redi do
 
   """
   def lindex(client // connect, key, index),
-    do: query(client, [ "LINDEX", key, to_binary(index) ])
+    do: query(client, [ "LINDEX", key, to_string(index) ])
 
   @doc """
   ## LINSERT key position pivot value
@@ -3045,7 +3045,7 @@ defmodule Redi do
   def set(client, key, value, opt1, opt2, opt3) when nil?(opt1) and
           nil?(opt2) and nil?(opt3) and is_pid(client),
 
-    do: query(client, [ "SET", key, to_binary(value) ])
+    do: query(client, [ "SET", key, to_string(value) ])
 
   # For Redi.set client, "key", "value", "opt1"
   #   or, Redi.set client, "key", "value", ["opt1", "value"]
@@ -3060,9 +3060,9 @@ defmodule Redi do
           nil?(opt2) and nil?(opt3) do
 
     if is_list(opt1) do
-      query(client, [ "SET" | [ key | [ to_binary(value) | opt1 ] ] ])
+      query(client, [ "SET" | [ key | [ to_string(value) | opt1 ] ] ])
     else
-      query(client, [ "SET", key, to_binary(value), opt1 ])
+      query(client, [ "SET", key, to_string(value), opt1 ])
     end
 
   end
@@ -3072,14 +3072,14 @@ defmodule Redi do
           is_list(opt1) and nil?(opt3),
 
     do: query(client,
-          [ "SET" | [ key | [ to_binary(value) | opt1 ++ [ opt2 ] ] ] ])
+          [ "SET" | [ key | [ to_string(value) | opt1 ++ [ opt2 ] ] ] ])
 
   # For Redi.set client, "key", "value", "opt1", ["opt2", "value"]
   def set(client, key, value, opt1, opt2, opt3) when is_pid(client) and
           is_list(opt2) and nil?(opt3),
 
     do: query(client,
-          [ "SET" | [ key | [ to_binary(value) | [ opt1 ] ++ opt2 ] ] ])
+          [ "SET" | [ key | [ to_string(value) | [ opt1 ] ++ opt2 ] ] ])
 
   # For Redi.set "key", "value", "opt1"
   #   or, Redi.set "key", "value", ["opt1", "value"]
@@ -3087,9 +3087,9 @@ defmodule Redi do
           nil?(opt2) and nil?(opt3) do
 
     if is_list(opt1) do
-      connect |> query [ "SET" | [ key | [ to_binary(value) | opt1 ] ] ]
+      connect |> query [ "SET" | [ key | [ to_string(value) | opt1 ] ] ]
     else
-      connect |> query [ "SET", key, to_binary(value), opt1 ]
+      connect |> query [ "SET", key, to_string(value), opt1 ]
     end
 
   end
@@ -3099,26 +3099,26 @@ defmodule Redi do
           is_list(opt1) and nil?(opt3),
 
     do: connect |> query [
-          "SET" | [ key | [ to_binary(value) | opt1 ++ [ opt2 ] ] ] ]
+          "SET" | [ key | [ to_string(value) | opt1 ++ [ opt2 ] ] ] ]
 
   # For Redi.set "key", "value", "opt1", ["opt2", "value"]
   def set(key, value, opt1, opt2, opt3, _) when not is_pid(key) and
           is_list(opt2) and nil?(opt3),
 
     do: connect |> query [
-          "SET" | [ key | [ to_binary(value) | [ opt1 ] ++ opt2 ] ] ]
+          "SET" | [ key | [ to_string(value) | [ opt1 ] ++ opt2 ] ] ]
 
   # For Redi.set "key", "value", ["opt1", "v1"], ["opt2", "v2"], "opt3"
   def set(key, value, opt1, opt2, opt3, _) when not is_pid(key) and
           is_list(opt1) and is_list(opt2),
 
     do: connect |> query [
-          "SET" | [ key | [ to_binary(value) | opt1 ++ opt2 ++ [ opt3 ] ] ] ]
+          "SET" | [ key | [ to_string(value) | opt1 ++ opt2 ++ [ opt3 ] ] ] ]
 
   # For Redi.set client, "key", "value", ["opt1", "v1"], ["opt2", "v2"], "opt3"
   def set(client, key, value, opt1, opt2, opt3),
     do: query(client,
-        [ "SET" | [ key | [ to_binary(value) | opt1 ++ opt2 ++ [ opt3 ] ] ] ])
+        [ "SET" | [ key | [ to_string(value) | opt1 ++ opt2 ++ [ opt3 ] ] ] ])
 
   @doc """
   ## SETBIT key offset value
