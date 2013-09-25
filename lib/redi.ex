@@ -3722,16 +3722,19 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "slkey"
-    "0"
-    iex> Redi.set "slkey", "Hello world"
-    "OK"
-    iex> Redi.strlen "slkey"
-    "11"
-    iex> Redi.strlen "nonexisting"
-    "0"
-    iex> Redi.del "slkey"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "slkey"
+        "0"
+        iex> Redi.set db, "slkey", "Hello world"
+        "OK"
+        iex> Redi.strlen db, "slkey"
+        "11"
+        iex> Redi.strlen db, "nonexisting"
+        "0"
+        iex> Redi.del db, "slkey"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def strlen(client // connect, key), do: query(client, [ "STRLEN", key ])
@@ -3775,22 +3778,25 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "srmset"
-    "0"
-    iex> Redi.sadd "srmset", "one"
-    "1"
-    iex> Redi.sadd "srmset", "two"
-    "1"
-    iex> Redi.sadd "srmset", "three"
-    "1"
-    iex> Redi.srem "srmset", "one"
-    "1"
-    iex> Redi.srem "srmset", "four"
-    "0"
-    iex> Redi.smembers "srmset"
-    ["two", "three"]
-    iex> Redi.del "srmset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "srmset"
+        "0"
+        iex> Redi.sadd db, "srmset", "one"
+        "1"
+        iex> Redi.sadd db, "srmset", "two"
+        "1"
+        iex> Redi.sadd db, "srmset", "three"
+        "1"
+        iex> Redi.srem db, "srmset", "one"
+        "1"
+        iex> Redi.srem db, "srmset", "four"
+        "0"
+        iex> Redi.smembers db, "srmset"
+        ["two", "three"]
+        iex> Redi.del db, "srmset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def srem(client // connect, key, member) do
@@ -3932,12 +3938,15 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.set "ttkey", "Hello"
-    "OK"
-    iex> Redi.expire "ttkey", 10
-    "1"
-    iex> Redi.ttl "ttkey"
-    "10"
+        iex> db = Redi.connect
+        iex> Redi.set db, "ttkey", "Hello"
+        "OK"
+        iex> Redi.expire db, "ttkey", 10
+        "1"
+        iex> Redi.ttl db, "ttkey"
+        "10"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def ttl(client // connect, key), do: query(client, [ "TTL", key ])
@@ -3957,20 +3966,23 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.set "tykey", "value"
-    "OK"
-    iex> Redi.lpush "tykey2", "value"
-    "1"
-    iex> Redi.sadd "tykey3", "value"
-    "1"
-    iex> Redi.type "tykey"
-    "string"
-    iex> Redi.type "tykey2"
-    "list"
-    iex> Redi.type "tykey3"
-    "set"
-    iex> Redi.del ["tykey", "tykey2", "tykey3"]
-    "3"
+        iex> db = Redi.connect
+        iex> Redi.set db, "tykey", "value"
+        "OK"
+        iex> Redi.lpush db, "tykey2", "value"
+        "1"
+        iex> Redi.sadd db, "tykey3", "value"
+        "1"
+        iex> Redi.type db, "tykey"
+        "string"
+        iex> Redi.type db, "tykey2"
+        "list"
+        iex> Redi.type db, "tykey3"
+        "set"
+        iex> Redi.del db, ["tykey", "tykey2", "tykey3"]
+        "3"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def type(client // connect, key), do: query(client, [ "TYPE", key ])
