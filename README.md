@@ -32,7 +32,7 @@ Installation
 
 Just add this to your `mix.exs`:
 
-    { :redi, "0.0.7", [ github: "copperwalls/redi", tag: "v0.0.7" ] }
+    { :redi, "0.0.9", [ github: "copperwalls/redi", tag: "v0.0.9" ] }
 
 Or, the following to always have the latest and greatest:
 
