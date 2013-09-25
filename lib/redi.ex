@@ -681,13 +681,13 @@ defmodule Redi do
   ## Examples
 
         iex> db = Redi.connect
-        iex> Redi.del "dmkey"
+        iex> Redi.del db, "dmkey"
         "0"
-        iex> Redi.set "dmkey", 10
+        iex> Redi.set db, "dmkey", 10
         "OK"
-        iex> Redi.dump "dmkey"
+        iex> Redi.dump db, "dmkey"
         <<0, 192, 10, 6, 0, 248, 114, 63, 197, 251, 251, 95, 40>>
-        iex> Redi.del "dmkey"
+        iex> Redi.del db, "dmkey"
         "1"
         iex> Redi.disconnect db
         :ok
@@ -4125,20 +4125,23 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "zazset"
-    "0"
-    iex> Redi.zadd "zazset", 1, "one"
-    "1"
-    iex> Redi.zadd "zazset", 1, "uno"
-    "1"
-    iex> Redi.zadd "zazset", 2, "two"
-    "1"
-    iex> Redi.zadd "zazset", 3, "two"
-    "0"
-    iex> Redi.zrange "zazset", 0, -1, "WITHSCORES"
-    ["one", "1", "uno", "1", "two", "3"]
-    iex> Redi.del "zazset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zazset"
+        "0"
+        iex> Redi.zadd db, "zazset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zazset", 1, "uno"
+        "1"
+        iex> Redi.zadd db, "zazset", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zazset", 3, "two"
+        "0"
+        iex> Redi.zrange db, "zazset", 0, -1, "WITHSCORES"
+        ["one", "1", "uno", "1", "two", "3"]
+        iex> Redi.del db, "zazset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zadd(client // connect, key, score, member // nil)
@@ -4172,16 +4175,19 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "zczset"
-    "0"
-    iex> Redi.zadd "zczset", 1, "one"
-    "1"
-    iex> Redi.zadd "zczset", 2, "two"
-    "1"
-    iex> Redi.zcard "zczset"
-    "2"
-    iex> Redi.del "zczset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zczset"
+        "0"
+        iex> Redi.zadd db, "zczset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zczset", 2, "two"
+        "1"
+        iex> Redi.zcard db, "zczset"
+        "2"
+        iex> Redi.del db, "zczset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zcard(client // connect, key), do: query(client, [ "ZCARD", key ])
@@ -4202,20 +4208,23 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "zcnzset"
-    "0"
-    iex> Redi.zadd "zcnzset", 1, "one"
-    "1"
-    iex> Redi.zadd "zcnzset", 2, "two"
-    "1"
-    iex> Redi.zadd "zcnzset", 3, "three"
-    "1"
-    iex> Redi.zcount "zcnzset", "-inf", "+inf"
-    "3"
-    iex> Redi.zcount "zcnzset", "(1", 3
-    "2"
-    iex> Redi.del "zcnzset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zcnzset"
+        "0"
+        iex> Redi.zadd db, "zcnzset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zcnzset", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zcnzset", 3, "three"
+        "1"
+        iex> Redi.zcount db, "zcnzset", "-inf", "+inf"
+        "3"
+        iex> Redi.zcount db, "zcnzset", "(1", 3
+        "2"
+        iex> Redi.del db, "zcnzset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zcount(client // connect, key, min, max),
@@ -4238,18 +4247,21 @@ defmodule Redi do
 
   ## Example
 
-    iex> Redi.del "zbyzset"
-    "0"
-    iex> Redi.zadd "zbyzset", 1, "one"
-    "1"
-    iex> Redi.zadd "zbyzset", 2, "two"
-    "1"
-    iex> Redi.zincrby "zbyzset", 2, "one"
-    "3"
-    iex> Redi.zrange "zbyzset", 0, -1, "WITHSCORES"
-    ["two", "2", "one", "3"]
-    iex> Redi.del "zbyzset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zbyzset"
+        "0"
+        iex> Redi.zadd db, "zbyzset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zbyzset", 2, "two"
+        "1"
+        iex> Redi.zincrby db, "zbyzset", 2, "one"
+        "3"
+        iex> Redi.zrange db, "zbyzset", 0, -1, "WITHSCORES"
+        ["two", "2", "one", "3"]
+        iex> Redi.del db, "zbyzset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zincrby(client // connect, key, increment, member),
@@ -4417,22 +4429,25 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "zrnzset"
-    "0"
-    iex> Redi.zadd "zrnzset", 1, "one"
-    "1"
-    iex> Redi.zadd "zrnzset", 2, "two"
-    "1"
-    iex> Redi.zadd "zrnzset", 3, "three"
-    "1"
-    iex> Redi.zrange "zrnzset", 0, -1
-    ["one", "two", "three"]
-    iex> Redi.zrange "zrnzset", 2, 3
-    ["three"]
-    iex> Redi.zrange "zrnzset", -2, -1
-    ["two", "three"]
-    iex> Redi.del "zrnzset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zrnzset"
+        "0"
+        iex> Redi.zadd db, "zrnzset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zrnzset", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zrnzset", 3, "three"
+        "1"
+        iex> Redi.zrange db, "zrnzset", 0, -1
+        ["one", "two", "three"]
+        iex> Redi.zrange db, "zrnzset", 2, 3
+        ["three"]
+        iex> Redi.zrange db, "zrnzset", -2, -1
+        ["two", "three"]
+        iex> Redi.del db, "zrnzset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zrange(client // connect, key, range_start, range_stop, withscores // nil)
@@ -4477,24 +4492,27 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "zrcrzset"
-    "0"
-    iex> Redi.zadd "zrcrzset", 1, "one"
-    "1"
-    iex> Redi.zadd "zrcrzset", 2, "two"
-    "1"
-    iex> Redi.zadd "zrcrzset", 3, "three"
-    "1"
-    iex> Redi.zrangebyscore "zrcrzset", "-inf", "+inf"
-    ["one", "two", "three"]
-    iex> Redi.zrangebyscore "zrcrzset", 1, 2
-    ["one", "two"]
-    iex> Redi.zrangebyscore "zrcrzset", "(1", 2
-    ["two"]
-    iex> Redi.zrangebyscore "zrcrzset", "(1", "(2"
-    []
-    iex> Redi.del "zrcrzset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zrcrzset"
+        "0"
+        iex> Redi.zadd db, "zrcrzset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zrcrzset", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zrcrzset", 3, "three"
+        "1"
+        iex> Redi.zrangebyscore db, "zrcrzset", "-inf", "+inf"
+        ["one", "two", "three"]
+        iex> Redi.zrangebyscore db, "zrcrzset", 1, 2
+        ["one", "two"]
+        iex> Redi.zrangebyscore db, "zrcrzset", "(1", 2
+        ["two"]
+        iex> Redi.zrangebyscore db, "zrcrzset", "(1", "(2"
+        []
+        iex> Redi.del db, "zrcrzset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zrangebyscore(client // connect, key, min, max, opt1 // nil, opt2 // nil)
@@ -4576,20 +4594,23 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "zrnkzset"
-    "0"
-    iex> Redi.zadd "zrnkzset", 1, "one"
-    "1"
-    iex> Redi.zadd "zrnkzset", 2, "two"
-    "1"
-    iex> Redi.zadd "zrnkzset", 3, "three"
-    "1"
-    iex> Redi.zrank "zrnkzset", "three"
-    "2"
-    iex> Redi.zrank "zrnkzset", "four"
-    :undefined
-    iex> Redi.del "zrnkzset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zrnkzset"
+        "0"
+        iex> Redi.zadd db, "zrnkzset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zrnkzset", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zrnkzset", 3, "three"
+        "1"
+        iex> Redi.zrank db, "zrnkzset", "three"
+        "2"
+        iex> Redi.zrank db, "zrnkzset", "four"
+        :undefined
+        iex> Redi.del db, "zrnkzset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zrank(client // connect, key, member),
@@ -4611,20 +4632,23 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "zrmzset"
-    "0"
-    iex> Redi.zadd "zrmzset", 1, "one"
-    "1"
-    iex> Redi.zadd "zrmzset", 2, "two"
-    "1"
-    iex> Redi.zadd "zrmzset", 3, "three"
-    "1"
-    iex> Redi.zrem "zrmzset", "two"
-    "1"
-    iex> Redi.zrange "zrmzset", 0, -1, "WITHSCORES"
-    ["one", "1", "three", "3"]
-    iex> Redi.del "zrmzset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zrmzset"
+        "0"
+        iex> Redi.zadd db, "zrmzset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zrmzset", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zrmzset", 3, "three"
+        "1"
+        iex> Redi.zrem db, "zrmzset", "two"
+        "1"
+        iex> Redi.zrange db, "zrmzset", 0, -1, "WITHSCORES"
+        ["one", "1", "three", "3"]
+        iex> Redi.del db, "zrmzset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zrem(client // connect, key, member) do
@@ -4648,20 +4672,23 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "zbrnzset"
-    "0"
-    iex> Redi.zadd "zbrnzset", 1, "one"
-    "1"
-    iex> Redi.zadd "zbrnzset", 2, "two"
-    "1"
-    iex> Redi.zadd "zbrnzset", 3, "three"
-    "1"
-    iex> Redi.zremrangebyrank "zbrnzset", 0, 1
-    "2"
-    iex> Redi.zrange "zbrnzset", 0, -1, "WITHSCORES"
-    ["three", "3"]
-    iex> Redi.del "zbrnzset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zbrnzset"
+        "0"
+        iex> Redi.zadd db, "zbrnzset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zbrnzset", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zbrnzset", 3, "three"
+        "1"
+        iex> Redi.zremrangebyrank db, "zbrnzset", 0, 1
+        "2"
+        iex> Redi.zrange db, "zbrnzset", 0, -1, "WITHSCORES"
+        ["three", "3"]
+        iex> Redi.del db, "zbrnzset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zremrangebyrank(client // connect, key, range_start, range_stop),
@@ -4683,20 +4710,23 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "zrmbzset"
-    "0"
-    iex> Redi.zadd "zrmbzset", 1, "one"
-    "1"
-    iex> Redi.zadd "zrmbzset", 2, "two"
-    "1"
-    iex> Redi.zadd "zrmbzset", 3, "three"
-    "1"
-    iex> Redi.zremrangebyscore "zrmbzset", "-inf", "(2"
-    "1"
-    iex> Redi.zrange "zrmbzset", 0, -1, "WITHSCORES"
-    ["two", "2", "three", "3"]
-    iex> Redi.del "zrmbzset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zrmbzset"
+        "0"
+        iex> Redi.zadd db, "zrmbzset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zrmbzset", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zrmbzset", 3, "three"
+        "1"
+        iex> Redi.zremrangebyscore db, "zrmbzset", "-inf", "(2"
+        "1"
+        iex> Redi.zrange db, "zrmbzset", 0, -1, "WITHSCORES"
+        ["two", "2", "three", "3"]
+        iex> Redi.del db, "zrmbzset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zremrangebyscore(client // connect, key, min, max),
@@ -4720,22 +4750,25 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "zrvrzset"
-    "0"
-    iex> Redi.zadd "zrvrzset", 1, "one"
-    "1"
-    iex> Redi.zadd "zrvrzset", 2, "two"
-    "1"
-    iex> Redi.zadd "zrvrzset", 3, "three"
-    "1"
-    iex> Redi.zrevrange "zrvrzset", 0, -1
-    ["three", "two", "one"]
-    iex> Redi.zrevrange "zrvrzset", 2, 3
-    ["one"]
-    iex> Redi.zrevrange "zrvrzset", -2, -1
-    ["two", "one"]
-    iex> Redi.del "zrvrzset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zrvrzset"
+        "0"
+        iex> Redi.zadd db, "zrvrzset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zrvrzset", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zrvrzset", 3, "three"
+        "1"
+        iex> Redi.zrevrange db, "zrvrzset", 0, -1
+        ["three", "two", "one"]
+        iex> Redi.zrevrange db, "zrvrzset", 2, 3
+        ["one"]
+        iex> Redi.zrevrange db, "zrvrzset", -2, -1
+        ["two", "one"]
+        iex> Redi.del db, "zrvrzset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zrevrange(client // connect, key, range_start, range_stop, withscores // nil)
@@ -4786,24 +4819,27 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "zrvbszset"
-    "0"
-    iex> Redi.zadd "zrvbszset", 1, "one"
-    "1"
-    iex> Redi.zadd "zrvbszset", 2, "two"
-    "1"
-    iex> Redi.zadd "zrvbszset", 3, "three"
-    "1"
-    iex> Redi.zrevrangebyscore "zrvbszset", "+inf", "-inf"
-    ["three", "two", "one"]
-    iex> Redi.zrevrangebyscore "zrvbszset", 2, 1
-    ["two", "one"]
-    iex> Redi.zrevrangebyscore "zrvbszset", 2, "(1"
-    ["two"]
-    iex> Redi.zrevrangebyscore "zrvbszset", "(2", "(1"
-    []
-    iex> Redi.del "zrvbszset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zrvbszset"
+        "0"
+        iex> Redi.zadd db, "zrvbszset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zrvbszset", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zrvbszset", 3, "three"
+        "1"
+        iex> Redi.zrevrangebyscore db, "zrvbszset", "+inf", "-inf"
+        ["three", "two", "one"]
+        iex> Redi.zrevrangebyscore db, "zrvbszset", 2, 1
+        ["two", "one"]
+        iex> Redi.zrevrangebyscore db, "zrvbszset", 2, "(1"
+        ["two"]
+        iex> Redi.zrevrangebyscore db, "zrvbszset", "(2", "(1"
+        []
+        iex> Redi.del db, "zrvbszset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zrevrangebyscore(client // connect, key, min, max, opt1 // nil, opt2 // nil)
@@ -4877,20 +4913,23 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del "zrvnkzset"
-    "0"
-    iex> Redi.zadd "zrvnkzset", 1, "one"
-    "1"
-    iex> Redi.zadd "zrvnkzset", 2, "two"
-    "1"
-    iex> Redi.zadd "zrvnkzset", 3, "three"
-    "1"
-    iex> Redi.zrevrank "zrvnkzset", "one"
-    "2"
-    iex> Redi.zrevrank "zrvnkzset", "four"
-    :undefined
-    iex> Redi.del "zrvnkzset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zrvnkzset"
+        "0"
+        iex> Redi.zadd db, "zrvnkzset", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zrvnkzset", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zrvnkzset", 3, "three"
+        "1"
+        iex> Redi.zrevrank db, "zrvnkzset", "one"
+        "2"
+        iex> Redi.zrevrank db, "zrvnkzset", "four"
+        :undefined
+        iex> Redi.del db, "zrvnkzset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zrevrank(client // connect, key, member),
@@ -4912,14 +4951,17 @@ defmodule Redi do
 
   ## Example
 
-    iex> Redi.del "zscrzset"
-    "0"
-    iex> Redi.zadd "zscrzset", 1, "one"
-    "1"
-    iex> Redi.zscore "zscrzset", "one"
-    "1"
-    iex> Redi.del "zscrzset"
-    "1"
+        iex> db = Redi.connect
+        iex> Redi.del db, "zscrzset"
+        "0"
+        iex> Redi.zadd db, "zscrzset", 1, "one"
+        "1"
+        iex> Redi.zscore db, "zscrzset", "one"
+        "1"
+        iex> Redi.del db, "zscrzset"
+        "1"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zscore(client // connect, key, member),
@@ -4944,24 +4986,27 @@ defmodule Redi do
 
   ## Examples
 
-    iex> Redi.del ["zset1", "zset2"]
-    "0"
-    iex> Redi.zadd "zset1", 1, "one"
-    "1"
-    iex> Redi.zadd "zset1", 2, "two"
-    "1"
-    iex> Redi.zadd "zset2", 1, "one"
-    "1"
-    iex> Redi.zadd "zset2", 2, "two"
-    "1"
-    iex> Redi.zadd "zset2", 3, "three"
-    "1"
-    iex> Redi.zunionstore "out", 2, ["zset1", "zset2"], ["WEIGHTS", 2, 3]
-    "3"
-    iex> Redi.zrange "out", 0, -1, "WITHSCORES"
-    ["one", "5", "three", "9", "two", "10"]
-    iex> Redi.del ["zset1", "zset2"]
-    "2"
+        iex> db = Redi.connect
+        iex> Redi.del db, ["zset1", "zset2"]
+        "0"
+        iex> Redi.zadd db, "zset1", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zset1", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zset2", 1, "one"
+        "1"
+        iex> Redi.zadd db, "zset2", 2, "two"
+        "1"
+        iex> Redi.zadd db, "zset2", 3, "three"
+        "1"
+        iex> Redi.zunionstore db, "out", 2, ["zset1", "zset2"], ["WEIGHTS", 2, 3]
+        "3"
+        iex> Redi.zrange db, "out", 0, -1, "WITHSCORES"
+        ["one", "5", "three", "9", "two", "10"]
+        iex> Redi.del db, ["zset1", "zset2"]
+        "2"
+        iex> Redi.disconnect db
+        :ok
 
   """
   def zunionstore(client // connect, dest, numkeys, key, opt1 // nil, opt2 // nil)
